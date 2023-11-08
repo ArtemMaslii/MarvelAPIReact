@@ -7,27 +7,12 @@ import CharInfo from "../charInfo/CharInfo";
 import decoration from '../../resources/img/vision.png';
 
 class App extends Component {
-
-    state = {
-        showRandomChar: true
-    }
-
-    toggleRandomChar = () => {
-        this.setState((state) => {
-            return {
-                showRandomChar: !state.showRandomChar
-            }
-        })
-    }
-
-
     render() {
         return (
             <div className="app">
                 <AppHeader/>
                 <main>
-                    {this.state.showRandomChar ? <RandomChar/> : null}
-                    <button onClick={this.toggleRandomChar}>ClickMe</button>
+                    <RandomChar/>
                     <div className="char__content">
                         <CharList/>
                         <CharInfo/>

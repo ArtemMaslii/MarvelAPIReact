@@ -9,7 +9,6 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 class RandomChar extends Component {
     constructor(props) {
         super(props);
-        this.updateChar();
     }
 
     state = {
@@ -38,6 +37,10 @@ class RandomChar extends Component {
             loading: false,
             error: true
         })
+    }
+
+    componentDidMount() {
+        this.updateChar();
     }
 
     render() {

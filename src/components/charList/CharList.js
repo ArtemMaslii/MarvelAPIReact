@@ -11,7 +11,10 @@ class CharList extends Component {
         this.state = {
             charList: [],
             loading: true,
-            error: false
+            error: false,
+            newItemLoading: false,
+            offset: 210,
+            charEnded: false
         }
         this.marvelService = new MarvelService();
 
@@ -19,16 +22,35 @@ class CharList extends Component {
 
 
     componentDidMount() {
-        this.marvelService.getAllCharacters()
+        this.onRequest();
+    }
+
+    onRequest = (offset) => {
+        this.onCharListLoading();
+        this.marvelService.getAllCharacters(offset)
         .then(this.onCharListLoaded)
         .catch(this.onError);
     }
 
-    onCharListLoaded = (charList) => {
+    onCharListLoading = () => {
         this.setState({
-            charList,
-            loading: false
+            newItemLoading: true
         });
+    }
+
+    onCharListLoaded = (newCharList) => {
+        let ended = false;
+        if (newCharList.length < 9) {
+            ended = true;
+        } 
+
+        this.setState(({charList, offset}) => ({
+                charList: [...charList, ...newCharList],
+                loading: false,
+                newItemLoading: false,
+                offset: offset + 9,
+                charEnded: ended
+        }));
     }
 
     onError = () => {
@@ -40,7 +62,7 @@ class CharList extends Component {
 
     renderItems(arr) {
         const items = arr.map((item) => {
-            let imgStyle = item.thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? 
+            let imgStyle = item.thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" || "http://i.annihil.us/u/prod/marvel/i/mg/f/60/4c002e0305708.gif" ? 
             {"objectFit" : "contain"} : {"objectFit" : "cover"};
 
             return (
@@ -62,7 +84,7 @@ class CharList extends Component {
     }
 
     render() {
-        const {charList, loading, error} = this.state;
+        const {charList, loading, error, newItemLoading, offset} = this.state;
 
         const items = this.renderItems(charList);
 
@@ -75,7 +97,10 @@ class CharList extends Component {
                 {errorMessage}
                 {spinner}
                 {content}
-                <button className='button button__main button__long'>
+                <button 
+                    className='button button__main button__long'
+                    disabled={newItemLoading}
+                    onClick={() => this.onRequest(offset)}>
                     <div className='inner'>load more</div>
                 </button>
             </div>

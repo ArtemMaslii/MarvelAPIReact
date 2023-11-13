@@ -6,13 +6,17 @@ import Spinner from '../spinner/Spinner';
 
 class CharList extends Component {
 
-    state = {
-        charList: [],
-        loading: true,
-        error: false
+    constructor(props) {
+        super(props);
+        this.state = {
+            charList: [],
+            loading: true,
+            error: false
+        }
+        this.marvelService = new MarvelService();
+
     }
-    
-    marvelService = new MarvelService();
+
 
     componentDidMount() {
         this.marvelService.getAllCharacters()
@@ -42,7 +46,8 @@ class CharList extends Component {
             return (
                 <li 
                 className="char__item"
-                key={item.id}>
+                key={item.id}
+                onClick={() => this.props.onCharSelected(item.id)}>
                     <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
                     <div className="char__name">{item.name}</div>
                 </li>

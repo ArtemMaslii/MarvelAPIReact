@@ -9,27 +9,22 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 class RandomChar extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            char: {},
+            loading: true,
+            error: false
+        }
+        this.marvelService = new MarvelService();
     }
-
-    state = {
-        char: {},
-        loading: true,
-        error: false
-    }
-
-    marvelService = new MarvelService();
 
     onCharLoaded = (char) => {
         this.setState({char, loading: false})
     }
 
-    updateChar = () => {
-        const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-
-         this.marvelService
-            .getCharacter(id)
-            .then(this.onCharLoaded)
-            .catch(this.onError);
+    onCharLoading = () => {
+        this.setState({
+            loading: true
+        });
     }
 
     onError = () => {
@@ -37,6 +32,15 @@ class RandomChar extends Component {
             loading: false,
             error: true
         })
+    }
+
+    updateChar = () => {
+        const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+        this.onCharLoading();
+         this.marvelService
+            .getCharacter(id)
+            .then(this.onCharLoaded)
+            .catch(this.onError);
     }
 
     componentDidMount() {

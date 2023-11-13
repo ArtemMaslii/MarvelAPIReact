@@ -58,12 +58,6 @@ class CharInfo extends Component {
         }
     }
 
-    componentDidCatch(error, info) {
-        console.log(error, info);
-        this.setState({
-            error: true
-        });
-    }
 
     render() {
         const {char, loading, error} = this.state;

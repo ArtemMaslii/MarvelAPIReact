@@ -7,6 +7,7 @@ import useMarvelService from '../../services/marvelService';
 import Skeleton from "../skeleton/Skeleton";
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+import { Link } from 'react-router-dom';
 
 const CharInfo = (props) => {
 
@@ -83,9 +84,12 @@ const View = ({char}) => {
                             return; 
                         }
                         return (
-                            <li key={i} className='char__comics-item'>
-                                {item.name}
-                            </li>
+                            <Link 
+                                key={i} 
+                                className='char__comics-item'
+                                to={`/comics/${new URL(item.resourceURI).pathname.split("/").pop()}`}>
+                                    {item.name}
+                            </Link>
                         );
                     })
                 }

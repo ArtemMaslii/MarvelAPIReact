@@ -5,6 +5,7 @@ import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/marvelService';
 import './charList.scss';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const CharList = (props) => {
     const [charList, setCharList] = useState([]);
@@ -45,38 +46,44 @@ const CharList = (props) => {
     }
 
     function renderItems(arr) {
-        const items =  arr.map((item, i) => {
-            let imgStyle = item.thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" || "http://i.annihil.us/u/prod/marvel/i/mg/f/60/4c002e0305708.gif" ? 
-            {"objectFit" : "contain"} : {"objectFit" : "cover"};
-            
-            return (
-                <li 
-                    className="char__item"
-                    tabIndex={0}
-                    ref={el => itemRefs.current[i] = el}
-                    key={item.id}
-                    onClick={() => {
-                        props.onCharSelected(item.id);
-                        focusOnItem(i);
-                    }}
-                    onKeyDown={(e) => {
-                        if (e.key === ' ' || e.key === "Enter") {
-                            props.onCharSelected(item.id);
-                            focusOnItem(i);
-                        }
-                    }}>
-                        <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
-                        <div className="char__name">{item.name}</div>
-                </li>
-            )
+        const items = arr.map((item, i) => {
+          let imgStyle =
+            item.thumbnail ===
+                'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ||
+            'http://i.annihil.us/u/prod/marvel/i/mg/f/60/4c002e0305708.gif'
+              ? { objectFit: 'contain' }
+              : { objectFit: 'cover' };
+      
+          return (
+            <CSSTransition key={item.id} timeout={1000} classNames="char__item">
+              <li
+                className="char__item"
+                tabIndex={0}
+                ref={(el) => (itemRefs.current[i] = el)}
+                onClick={() => {
+                  props.onCharSelected(item.id);
+                  focusOnItem(i);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === ' ' || e.key === 'Enter') {
+                    props.onCharSelected(item.id);
+                    focusOnItem(i);
+                  }
+                }}
+              >
+                <img src={item.thumbnail} alt={item.name} style={imgStyle} />
+                <div className="char__name">{item.name}</div>
+              </li>
+            </CSSTransition>
+          );
         });
-
+      
         return (
-            <ul className="char__grid">
-                {items}
-            </ul>
-        )
-    }
+          <ul className="char__grid">
+            <TransitionGroup component={null}>{items}</TransitionGroup>
+          </ul>
+        );
+      }
 
         const items = renderItems(charList);
 

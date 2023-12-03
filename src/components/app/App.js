@@ -5,9 +5,11 @@ import AppHeader from "../appHeader/AppHeader";
 import MainPage from "../pages";
 import Spinner from "../spinner/Spinner";
 
+const SinglePage = lazy(() => import("../pages/SinglePage"));
 const NotFound = lazy(() => import("../pages/404/404"));
 const ComicsPage = lazy(() => import("../pages/ComicsPage"));
-const SingleComicPage = lazy(() => import("../pages/singleComics/SingleComicPage"));
+const SingleComicLayout = lazy(() => import("../pages/singleComic/SingleComicLayout"));
+const SingleCharacterLayout = lazy(() => import("../pages/singleCharacter/SingleCharacterLayout"));
 
 const App = () => {
         return (
@@ -19,8 +21,13 @@ const App = () => {
                             <Routes>
                                 <Route path="/" element={<MainPage/>}/>
                                 <Route path="/comics" element={<ComicsPage/>}/>
-                                <Route path="/comics/:id" element={<SingleComicPage />} />
                                 <Route path="*" element={<NotFound/>}/>
+                                <Route 
+                                    path="/comics/:id" 
+                                    element={<SinglePage Component={SingleComicLayout} dataType="comic"/>}/>
+                                <Route 
+                                    path="/characters/:id" 
+                                    element={<SinglePage Component={SingleCharacterLayout} dataType="character"/>}/>
                             </Routes>
                         </Suspense>
                     </main>

@@ -22,9 +22,9 @@ const useMarvelService = () => {
         return res.data.results.map(_transformComics);
     }
 
-    const getCharacter = async (id) => {
+    const getCharacter = async (id, fullDesc = false) => {
         const res = await request(`${_apiBase}characters/${id}?${_apiKey}`);
-        return _transformCharacter(res.data.results[0]);
+        return _transformCharacter(res.data.results[0], fullDesc);
     }
 
     const getComic = async (id) => {
@@ -33,12 +33,12 @@ const useMarvelService = () => {
         return _transformComics(res.data.results[0]);
     }
 
-    const _transformCharacter = (char) => {
+    const _transformCharacter = (char, fullDesc) => {
 
         return {
             id: char.id,
             name: char.name,
-            description: char.description ? `${char.description.slice(0, 210)}...` : 'There is no description for this character',
+            description: char.description ? (fullDesc ? char.description : `${char.description.slice(0, 210)}...`) : 'There is no description for this character',
             thumbnail: char.thumbnail.path + "." + char.thumbnail.extension,
             homepage: char.urls[0].url,
             wiki: char.urls[1].url,

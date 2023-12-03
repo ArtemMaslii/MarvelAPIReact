@@ -49,7 +49,7 @@ const useMarvelService = () => {
     const _transformComics = (comics) => {
         return {
             id: comics.id,
-            title: comics.title,
+            title: comics.title && !comics.title.endsWith(" #-1") ? comics.title : comics.title.replace(/ #-1$/, ""),
             description: comics.description || 'There is no description for this comics',
             pageCount : comics.pageCount ? `${comics.pageCount} pages` : "There is no information about number of pages",
             thumbnail: comics.thumbnail.path + "." + comics.thumbnail.extension,

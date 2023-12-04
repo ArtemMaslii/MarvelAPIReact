@@ -3,7 +3,7 @@ import './charInfo.scss';
 import { useState, useEffect } from 'react';
 import PropTypes from "prop-types";
 
-import useMarvelService from '../../services/marvelService';
+import useMarvelService from '../../services/MarvelService';
 import Skeleton from "../skeleton/Skeleton";
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';

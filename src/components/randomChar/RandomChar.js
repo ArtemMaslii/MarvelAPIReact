@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import useMarvelService from '../../services/marvelService';
+import useMarvelService from '../../services/MarvelService';
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';

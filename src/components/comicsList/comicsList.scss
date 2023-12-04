@@ -29,6 +29,24 @@
             color: rgba(0, 0, 0, 0.6);
             text-transform: uppercase;
         }
+        &-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        &-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 1000ms, transform 1000ms;
+        }
+        &-exit {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        &-exit-active {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1000ms, transform 1000ms;
+        }
         &:hover {
             transform: translateY(-5px);
         }

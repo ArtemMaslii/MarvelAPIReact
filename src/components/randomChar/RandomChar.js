@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import useMarvelService from '../../services/MarvelService';
+import setContent from '../../utils/setContent';
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 
 const RandomChar = () => {
     
-    const [char, setChar] = useState({});
-    const {loading, error, clearError, getCharacter} = useMarvelService();
+    const [char, setChar] = useState(null);
+    const {clearError, getCharacter, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         updateChar();
@@ -30,19 +29,17 @@ const RandomChar = () => {
         clearError();
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         getCharacter(id)
-            .then(onCharLoaded);
+        .then(onCharLoaded)
+        .then(() => {
+            if (typeof process !== 'undefined') {
+                setProcess("confirmed");
+            }
+        });
     }
-
-
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error) ? <View char={char}/> : null;
 
     return (
         <div className="randomchar">
-            {errorMessage}
-            {spinner}
-            {content}
+            {setContent(process, View, char)}
             <div className="randomchar__static">
                 <p className="randomchar__title">
                     Random character for today!<br/>
@@ -60,8 +57,8 @@ const RandomChar = () => {
     )
 }
 
-const View = ({char}) => {
-    const {id, name, description, thumbnail, wiki} = char;
+const View = ({data}) => {
+    const {id, name, description, thumbnail, wiki} = data;
     let imgStyle = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" || "http://i.annihil.us/u/prod/marvel/i/mg/f/60/4c002e0305708.gif" ? 
     {"objectFit" : "contain"} : {"objectFit" : "cover"};
     

@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
@@ -65,57 +65,62 @@ const CharList = (props) => {
     }
 
     function renderItems(arr) {
-        const items = arr.map((item, i) => {
-          let imgStyle =
-            item.thumbnail ===
-                'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ||
-            'http://i.annihil.us/u/prod/marvel/i/mg/f/60/4c002e0305708.gif'
-              ? { objectFit: 'contain' }
-              : { objectFit: 'cover' };
-      
-          return (
-            <CSSTransition key={item.id} timeout={1000} classNames="char__item">
-              <li
-                className="char__item"
-                tabIndex={0}
-                ref={(el) => (itemRefs.current[i] = el)}
-                onClick={() => {
+      const items = arr.map((item, i) => {
+        let imgStyle =
+          item.thumbnail ===
+              'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ||
+          'http://i.annihil.us/u/prod/marvel/i/mg/f/60/4c002e0305708.gif'
+            ? { objectFit: 'contain' }
+            : { objectFit: 'cover' };
+    
+        return (
+          <CSSTransition key={item.id} timeout={1000} classNames="char__item">
+            <li
+              className="char__item"
+              tabIndex={0}
+              ref={(el) => (itemRefs.current[i] = el)}
+              onClick={() => {
+                props.onCharSelected(item.id);
+                focusOnItem(i);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') {
                   props.onCharSelected(item.id);
                   focusOnItem(i);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === ' ' || e.key === 'Enter') {
-                    props.onCharSelected(item.id);
-                    focusOnItem(i);
-                  }
-                }}
-              >
-                <img src={item.thumbnail} alt={item.name} style={imgStyle} />
-                <div className="char__name">{item.name}</div>
-              </li>
-            </CSSTransition>
-          );
-        });
-      
-        return (
-          <TransitionGroup component="ul" className="char__grid">
-            {items}
-          </TransitionGroup>
+                }
+              }}
+            >
+              <img src={item.thumbnail} alt={item.name} style={imgStyle} />
+              <div className="char__name">{item.name}</div>
+            </li>
+          </CSSTransition>
         );
-      }
+      });
+    
+      return (
+        <TransitionGroup component="ul" className="char__grid">
+          {items}
+        </TransitionGroup>
+      );
+    }
 
-        return (
-            <div className="char__list">
-                {setContent(process, () => renderItems(charList), newItemLoading)}
-                <button 
-                    className="button button__main button__long"
-                    disabled={newItemLoading}
-                    style={{'display': charEnded ? 'none' : 'block'}}
-                    onClick={() => onRequest(offset)}>
-                    <div className="inner">load more</div>
-                </button>
-            </div>
-        )
+    const elements = useMemo(() => {
+        return setContent(process, () => renderItems(charList), newItemLoading);
+        // eslint-disable-next-line
+    }, [process]);
+
+    return (
+        <div className="char__list">
+            {elements}
+            <button 
+                className="button button__main button__long"
+                disabled={newItemLoading}
+                style={{'display': charEnded ? 'none' : 'block'}}
+                onClick={() => onRequest(offset)}>
+                <div className="inner">load more</div>
+            </button>
+        </div>
+    )
 }
 
 CharList.propTypes = {

@@ -1,6 +1,5 @@
 import {useState, useEffect, useRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import useMarvelService from '../../services/MarvelService';
 
@@ -75,8 +74,8 @@ const CharList = (props) => {
             : { objectFit: 'cover' };
     
         return (
-          <CSSTransition key={item.id} timeout={1000} classNames="char__item">
             <li
+              key={item.id}
               className="char__item"
               tabIndex={0}
               ref={(el) => (itemRefs.current[i] = el)}
@@ -94,14 +93,13 @@ const CharList = (props) => {
               <img src={item.thumbnail} alt={item.name} style={imgStyle} />
               <div className="char__name">{item.name}</div>
             </li>
-          </CSSTransition>
         );
       });
     
       return (
-        <TransitionGroup component="ul" className="char__grid">
+        <ul className='char__grid'>
           {items}
-        </TransitionGroup>
+        </ul>
       );
     }
 
